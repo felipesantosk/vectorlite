@@ -28,21 +28,21 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: Ubuntu x86_64
-            os: ubuntu-latest
-            cibw_archs: x86_64
+          # - name: Ubuntu x86_64
+          #   os: ubuntu-latest
+          #   cibw_archs: x86_64
           - name: ARM64 - Emulated
             os: ubuntu-latest
             cibw_archs: "aarch64"
-          - name: Windows
-            os: windows-latest
-            cibw_archs: "auto"
-          - name: Macos 13
-            os: macos-13
-            cibw_archs: "auto"
-          - name: Macos 14
-            os: macos-14
-            cibw_archs: "auto"
+          # - name: Windows
+          #   os: windows-latest
+          #   cibw_archs: "auto"
+          # - name: Macos 13
+          #   os: macos-1
+          #   cibw_archs: "auto"
+          # - name: Macos 14
+          #   os: macos-14
+          #   cibw_archs: "auto"
         # os: [ubuntu-latest, macos-13, macos-14]
         # os: [windows-latest]
 
@@ -74,9 +74,19 @@ jobs:
           cmake-version: '3.29.6'
 
       - name: Setup Ninja
+        # For now this action doesn't support arm64
+        if: matrix.cibw_archs != 'aarch64'
         uses: seanmiddleditch/gha-setup-ninja@v5
         with:
           version: 1.11.1
+
+      - name: Setup Ninja for aarch64
+        if: matrix.cibw_archs == 'aarch64'
+        run: |
+          curl -LO https://github.com/ninja-build/ninja/releases/download/v1.12.0/ninja-linux-aarch64.zip
+          unzip ninja-linux-aarch64.zip
+          mv ninja /usr/local/bin/
+          rm ninja-linux-aarch64.zip
 
       - name: Bootstrap vcpkg
         run: |
