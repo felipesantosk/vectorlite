@@ -23,20 +23,25 @@ on:
 
 jobs:
   build_wheels:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build wheels on ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
-            cibw_archs: "x86_64"
-          - os: ubuntu-latest
+          - name: Ubuntu x86_64
+            os: ubuntu-latest
+            cibw_archs: x86_64
+          - name: ARM64 - Emulated
+            os: ubuntu-latest
             cibw_archs: "aarch64"
-          - os: windows-latest
+          - name: Windows
+            os: windows-latest
             cibw_archs: "auto"
-          - os: macos-13
+          - name: Macos 13
+            os: macos-13
             cibw_archs: "auto"
-          - os: macos-14
+          - name: Macos 14
+            os: macos-14
             cibw_archs: "auto"
         # os: [ubuntu-latest, macos-13, macos-14]
         # os: [windows-latest]
