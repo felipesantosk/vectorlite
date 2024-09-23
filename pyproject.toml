@@ -13,6 +13,17 @@ skip = ["*-win32", "*-win_arm64", "*-manylinux_i686", "*musllinux*", "pp*", "cp3
 environment = {MACOSX_DEPLOYMENT_TARGET = "10.15"} # 10.15 is the minimum version that fully supports c++17
 
 # todo: support musllinux
-# [tool.cibuildwheel.linux]
-# before-build = "yum install -y ninja-build"
+[tool.cibuildwheel.linux]
+before-build = "yum install -y ninja-build"
+
+[[tool.cibuildwheel.overrides]]
+select = "*aarch64*"
+environment = {VCPKG_FORCE_SYSTEM_BINARIES="1"}
+before-build = [ 
+    "yum update",
+    "yum install -y curl zip unzip tar",
+    "git clone https://github.com/ninja-build/ninja.git",
+    "cd ninja && python3 configure.py --bootstrap",
+    "mv ninja /usr/bin/ && cd .. && rm -rf ninja"
+    ]
 

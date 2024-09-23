@@ -80,14 +80,6 @@ jobs:
         with:
           version: 1.11.1
 
-      # - name: Setup Ninja for aarch64
-      #   if: matrix.cibw_archs == 'aarch64'
-      #   run: |
-      #     curl -LO https://github.com/ninja-build/ninja/releases/download/v1.12.0/ninja-linux-aarch64.zip
-      #     unzip ninja-linux-aarch64.zip
-      #     mv ninja /usr/local/bin/
-      #     rm ninja-linux-aarch64.zip
-
       - name: Bootstrap vcpkg
         run: |
           git submodule update --init --recursive
@@ -97,13 +89,6 @@ jobs:
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
           CIBW_ARCHS: ${{ matrix.cibw_archs }}
-          CIBW_BEFORE_BUILD: >-
-            git clone https://github.com/ninja-build/ninja.git &&
-            cd ninja &&
-            python3 configure.py --bootstrap &&
-            mv ninja /usr/bin/ &&
-            cd .. &&
-            rm -rf ninja
 
       - uses: actions/upload-artifact@v4
         with:
