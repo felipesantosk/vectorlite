@@ -1,0 +1,15 @@
+FROM quay.io/pypa/manylinux2014_aarch64:2024.09.16-1
+
+RUN yum update \
+    && yum install -y python3 curl zip unzip tar
+
+RUN git clone https://github.com/ninja-build/ninja.git /tmp/ninja \
+    && cd /tmp/ninja \
+    && python3 configure.py --bootstrap \
+    && mv ninja /usr/bin/ \
+    && cd \
+    && rm -rf /tmp/ninja
+
+ENV VCPKG_FORCE_SYSTEM_BINARIES=1
+
+WORKDIR /workspace
